@@ -34,9 +34,22 @@ classdef UAT_exported < matlab.apps.AppBase
         ConstructButton                 matlab.ui.control.Button
         PreviewButton                   matlab.ui.control.Button
         UIAxes                          matlab.ui.control.UIAxes
+        FSSTab                          matlab.ui.container.Tab
+        ElementSpacingmmEditField       matlab.ui.control.NumericEditField
+        ElementSpacingmmEditFieldLabel  matlab.ui.control.Label
+        InnerRadiusmmEditField          matlab.ui.control.NumericEditField
+        InnerRadiusmmEditFieldLabel     matlab.ui.control.Label
+        OuterRadiusmmEditField          matlab.ui.control.NumericEditField
+        OuterRadiusmmEditFieldLabel     matlab.ui.control.Label
+        ConstructFSSButton              matlab.ui.control.Button
+        PreviewFSSButton                matlab.ui.control.Button
+        LatticeStructureDropDown        matlab.ui.control.DropDown
+        LatticeStructureDropDownLabel   matlab.ui.control.Label
+        UnitCellTypeDropDown            matlab.ui.control.DropDown
+        UnitCellTypeDropDownLabel       matlab.ui.control.Label
+        UIAxes_FSS                      matlab.ui.control.UIAxes
         ReflectorAntennaTab             matlab.ui.container.Tab
         SeptumPolarizerTab              matlab.ui.container.Tab
-        FSSTab                          matlab.ui.container.Tab
         WaveguideFilterTab              matlab.ui.container.Tab
         UltimateAntennaDesignerToolLabel  matlab.ui.control.Label
     end
@@ -978,6 +991,116 @@ classdef UAT_exported < matlab.apps.AppBase
                     end
             end
         end
+
+        % Button pushed function: PreviewFSSButton
+        function PreviewFSSButtonPushed(app, event)
+            celltype = app.UnitCellTypeDropDown.Value;
+            lattice = app.LatticeStructureDropDown.Value;
+
+            switch celltype
+                case 'Circular'
+                    switch lattice
+                        case 'Triangular'
+                            hold(app.UIAxes_FSS,'off')
+                            r_out=app.OuterRadiusmmEditField.Value;
+                            dist=app.ElementSpacingmmEditField.Value;
+
+                            th = 0:pi/50:2*pi;
+                            xunit_out = r_out * cos(th);
+                            yunit_out = r_out * sin(th);
+
+                            plot(app.UIAxes_FSS, xunit_out, yunit_out,'r');
+                            hold(app.UIAxes_FSS,'on')
+                            set(app.UIAxes_FSS, "linewidth",2, "fontsize", 14 ,'DataAspectRatio',[1 1 1])
+                            fill(app.UIAxes_FSS, [0* cos(th) flip(xunit_out)],[0*sin(th) flip(yunit_out)],'b')
+
+                            for ii=0:60:300
+                                plot(app.UIAxes_FSS, xunit_out+dist*sind(ii), yunit_out+dist*cosd(ii),'r');
+                                set(app.UIAxes_FSS, "linewidth",2, "fontsize", 14 ,'DataAspectRatio',[1 1 1])
+                                fill(app.UIAxes_FSS, [0* sin(th)+dist*sind(ii) flip(xunit_out+dist*sind(ii))],...
+                                    [0*cos(th)+dist*cosd(ii) flip(yunit_out+dist*cosd(ii))],'b')
+                            end
+                        case 'Rectangular'
+                            hold(app.UIAxes_FSS,'off')
+                            r_out=app.OuterRadiusmmEditField.Value;
+                            dist=app.ElementSpacingmmEditField.Value;
+
+                            th = 0:pi/50:2*pi;
+                            xunit_out = r_out * cos(th);
+                            yunit_out = r_out * sin(th);
+
+                            for ii=45:90:315
+                                plot(app.UIAxes_FSS, xunit_out+dist*sqrt(2)*sind(ii)/2, yunit_out+dist*sqrt(2)*cosd(ii)/2,'b');
+                                hold(app.UIAxes_FSS,'on')
+                                set(app.UIAxes_FSS, "linewidth",2, "fontsize", 14 ,'DataAspectRatio',[1 1 1])
+                                fill(app.UIAxes_FSS, [0*cos(th)+dist*sqrt(2)*sind(ii)/2 flip(xunit_out+dist*sqrt(2)*sind(ii)/2)] ...
+                                    ,[0*sin(th)+dist*sqrt(2)*cosd(ii)/2 flip(yunit_out+dist*sqrt(2)*cosd(ii)/2)],'b')
+                            end
+                    end
+                case 'Circular Loop'
+                    switch lattice
+                        case 'Triangular'
+                            hold(app.UIAxes_FSS,'off')
+                            r_out=app.OuterRadiusmmEditField.Value;
+                            r_in=app.InnerRadiusmmEditField.Value;
+                            dist=app.ElementSpacingmmEditField.Value;
+
+                            th = 0:pi/50:2*pi;
+                            xunit_out = r_out * cos(th);
+                            yunit_out = r_out * sin(th);
+                            plot(app.UIAxes_FSS, xunit_out, yunit_out);
+                            hold(app.UIAxes_FSS,'on')
+                            set(app.UIAxes_FSS, "linewidth",2, "fontsize", 14 ,'DataAspectRatio',[1 1 1])
+
+                            xunit_in = r_in * cos(th);
+                            yunit_in = r_in * sin(th);
+                            plot(app.UIAxes_FSS, xunit_in, yunit_in);
+                            set(app.UIAxes_FSS, "linewidth",2, "fontsize", 14 ,'DataAspectRatio',[1 1 1])
+
+                            fill(app.UIAxes_FSS, [xunit_in flip(xunit_out)],[yunit_in flip(yunit_out)],'b')
+                            for ii=0:60:300
+                                plot(app.UIAxes_FSS, xunit_out+dist*sind(ii), yunit_out+dist*cosd(ii));
+                                set(app.UIAxes_FSS, "linewidth",2, "fontsize", 14 ,'DataAspectRatio',[1 1 1])
+                                plot(app.UIAxes_FSS, xunit_in+dist*sind(ii), yunit_in+dist*cosd(ii));
+                                set(app.UIAxes_FSS, "linewidth",2, "fontsize", 14 ,'DataAspectRatio',[1 1 1])
+                                fill(app.UIAxes_FSS, [xunit_in+dist*sind(ii) flip(xunit_out+dist*sind(ii))], ...
+                                    [yunit_in+dist*cosd(ii) flip(yunit_out+dist*cosd(ii))],'b')
+                            end
+                        case 'Rectangular'
+                            hold(app.UIAxes_FSS,'off')
+                            r_out=app.OuterRadiusmmEditField.Value;
+                            r_in=app.InnerRadiusmmEditField.Value;
+                            dist=app.ElementSpacingmmEditField.Value;
+
+                            th = 0:pi/50:2*pi;
+                            xunit_out = r_out * cos(th);
+                            yunit_out = r_out * sin(th);
+                            xunit_in = r_in * cos(th);
+                            yunit_in = r_in * sin(th);
+
+                            for ii=45:90:315
+                                plot(app.UIAxes_FSS, xunit_out+dist*sqrt(2)*sind(ii)/2, yunit_out+dist*sqrt(2)*cosd(ii)/2,'b');
+                                hold(app.UIAxes_FSS,'on')
+                                plot(app.UIAxes_FSS, xunit_in+dist*sqrt(2)*sind(ii)/2, yunit_in+dist*sqrt(2)*cosd(ii)/2,'b');
+                                set(app.UIAxes_FSS, "linewidth",2, "fontsize", 14 ,'DataAspectRatio',[1 1 1])
+                                fill(app.UIAxes_FSS, [xunit_in+dist*sqrt(2)*sind(ii)/2 flip(xunit_out+dist*sqrt(2)*sind(ii)/2)] ...
+                                    ,[yunit_in+dist*sqrt(2)*cosd(ii)/2 flip(yunit_out+dist*sqrt(2)*cosd(ii)/2)],'b')
+                            end
+                    end
+                case 'Rectangular'
+                    horn_profile = 3;
+                case 'Ractangular Loop'
+                    horn_profile = 4;
+                case 'Triangular'
+                    horn_profile = 5;
+                case 'Triangular Loop'
+                    horn_profile = 6;
+                case 'Hexagonal'
+                    horn_profile = 7;
+                case 'Hexagonal Loop'
+                    horn_profile = 8;
+            end
+        end
     end
 
     % Component initialization
@@ -1103,7 +1226,7 @@ classdef UAT_exported < matlab.apps.AppBase
 
             % Create PitchEditField
             app.PitchEditField = uieditfield(app.CorrugatedAntennaTab, 'numeric');
-            app.PitchEditField.Limits = [0 Inf];
+            app.PitchEditField.Limits = [5 10];
             app.PitchEditField.Position = [218 356 44 22];
             app.PitchEditField.Value = 8;
 
@@ -1191,6 +1314,90 @@ classdef UAT_exported < matlab.apps.AppBase
             app.VariablepwslotMCDeltaEditField.Position = [218 145 44 22];
             app.VariablepwslotMCDeltaEditField.Value = 0.125;
 
+            % Create FSSTab
+            app.FSSTab = uitab(app.TabGroup);
+            app.FSSTab.Title = 'FSS';
+
+            % Create UIAxes_FSS
+            app.UIAxes_FSS = uiaxes(app.FSSTab);
+            title(app.UIAxes_FSS, 'Complete Corrugated Horn Profile')
+            xlabel(app.UIAxes_FSS, 'Dimension in z Direction (mm)')
+            ylabel(app.UIAxes_FSS, 'Dimension in y Direction (mm)')
+            zlabel(app.UIAxes_FSS, 'Z')
+            app.UIAxes_FSS.FontWeight = 'bold';
+            app.UIAxes_FSS.XGrid = 'on';
+            app.UIAxes_FSS.YGrid = 'on';
+            app.UIAxes_FSS.FontSize = 12;
+            app.UIAxes_FSS.Position = [439 64 558 427];
+
+            % Create UnitCellTypeDropDownLabel
+            app.UnitCellTypeDropDownLabel = uilabel(app.FSSTab);
+            app.UnitCellTypeDropDownLabel.Position = [23 449 78 22];
+            app.UnitCellTypeDropDownLabel.Text = 'Unit Cell Type';
+
+            % Create UnitCellTypeDropDown
+            app.UnitCellTypeDropDown = uidropdown(app.FSSTab);
+            app.UnitCellTypeDropDown.Items = {'Circular', 'Circular Loop', 'Rectangular', 'Ractangular Loop', 'Triangular', 'Triangular Loop', 'Hexagonal', 'Hexagonal Loop'};
+            app.UnitCellTypeDropDown.Position = [132 449 139 22];
+            app.UnitCellTypeDropDown.Value = 'Circular';
+
+            % Create LatticeStructureDropDownLabel
+            app.LatticeStructureDropDownLabel = uilabel(app.FSSTab);
+            app.LatticeStructureDropDownLabel.Position = [23 418 94 22];
+            app.LatticeStructureDropDownLabel.Text = 'Lattice Structure';
+
+            % Create LatticeStructureDropDown
+            app.LatticeStructureDropDown = uidropdown(app.FSSTab);
+            app.LatticeStructureDropDown.Items = {'Triangular', 'Rectangular'};
+            app.LatticeStructureDropDown.Position = [132 418 139 22];
+            app.LatticeStructureDropDown.Value = 'Triangular';
+
+            % Create PreviewFSSButton
+            app.PreviewFSSButton = uibutton(app.FSSTab, 'push');
+            app.PreviewFSSButton.ButtonPushedFcn = createCallbackFcn(app, @PreviewFSSButtonPushed, true);
+            app.PreviewFSSButton.BackgroundColor = [0.9412 0.9412 0.9412];
+            app.PreviewFSSButton.Position = [612 23 100 22];
+            app.PreviewFSSButton.Text = 'Preview';
+
+            % Create ConstructFSSButton
+            app.ConstructFSSButton = uibutton(app.FSSTab, 'push');
+            app.ConstructFSSButton.BackgroundColor = [0.9412 0.9412 0.9412];
+            app.ConstructFSSButton.Position = [775 23 100 22];
+            app.ConstructFSSButton.Text = 'Construct';
+
+            % Create OuterRadiusmmEditFieldLabel
+            app.OuterRadiusmmEditFieldLabel = uilabel(app.FSSTab);
+            app.OuterRadiusmmEditFieldLabel.Position = [23 378 108 22];
+            app.OuterRadiusmmEditFieldLabel.Text = 'Outer Radius (mm)';
+
+            % Create OuterRadiusmmEditField
+            app.OuterRadiusmmEditField = uieditfield(app.FSSTab, 'numeric');
+            app.OuterRadiusmmEditField.Limits = [0 Inf];
+            app.OuterRadiusmmEditField.Position = [205 378 44 22];
+            app.OuterRadiusmmEditField.Value = 5;
+
+            % Create InnerRadiusmmEditFieldLabel
+            app.InnerRadiusmmEditFieldLabel = uilabel(app.FSSTab);
+            app.InnerRadiusmmEditFieldLabel.Position = [23 347 105 22];
+            app.InnerRadiusmmEditFieldLabel.Text = 'Inner Radius (mm)';
+
+            % Create InnerRadiusmmEditField
+            app.InnerRadiusmmEditField = uieditfield(app.FSSTab, 'numeric');
+            app.InnerRadiusmmEditField.Limits = [0 Inf];
+            app.InnerRadiusmmEditField.Position = [205 347 44 22];
+            app.InnerRadiusmmEditField.Value = 4.5;
+
+            % Create ElementSpacingmmEditFieldLabel
+            app.ElementSpacingmmEditFieldLabel = uilabel(app.FSSTab);
+            app.ElementSpacingmmEditFieldLabel.Position = [23 316 128 22];
+            app.ElementSpacingmmEditFieldLabel.Text = 'Element Spacing (mm)';
+
+            % Create ElementSpacingmmEditField
+            app.ElementSpacingmmEditField = uieditfield(app.FSSTab, 'numeric');
+            app.ElementSpacingmmEditField.Limits = [0 Inf];
+            app.ElementSpacingmmEditField.Position = [205 316 44 22];
+            app.ElementSpacingmmEditField.Value = 15;
+
             % Create ReflectorAntennaTab
             app.ReflectorAntennaTab = uitab(app.TabGroup);
             app.ReflectorAntennaTab.Title = 'Reflector Antenna';
@@ -1198,10 +1405,6 @@ classdef UAT_exported < matlab.apps.AppBase
             % Create SeptumPolarizerTab
             app.SeptumPolarizerTab = uitab(app.TabGroup);
             app.SeptumPolarizerTab.Title = 'Septum Polarizer';
-
-            % Create FSSTab
-            app.FSSTab = uitab(app.TabGroup);
-            app.FSSTab.Title = 'FSS';
 
             % Create WaveguideFilterTab
             app.WaveguideFilterTab = uitab(app.TabGroup);
