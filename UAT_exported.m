@@ -151,8 +151,7 @@ classdef UAT_exported < matlab.apps.AppBase
                     a = ai+(ao-ai)*z/len;
 
                     plot(app.UIAxes, z, a);
-                    set(app.UIAxes, "linewidth",2, "fontsize", 14 )
-                    axis equal;
+                    set(app.UIAxes, "linewidth",2, "fontsize", 14 ,'DataAspectRatio',[1 1 1])
                     xlabel(app.UIAxes, 'Dimension in z Direction (mm)', 'FontSize', 14 );
                     ylabel(app.UIAxes, 'Dimension in y Direction (mm)', 'FontSize', 14 );
                     title(app.UIAxes, 'Linear Horn Profile', 'FontSize', 16 );
@@ -164,8 +163,7 @@ classdef UAT_exported < matlab.apps.AppBase
                     a = ai+(ao-ai)*((1-A)*(z/len)+A*power(sin((pi*z)/(2*len)),rho));
 
                     plot(app.UIAxes, z, a);
-                    set(app.UIAxes,"linewidth",2, "fontsize", 14 )
-                    axis equal;
+                    set(app.UIAxes, "linewidth",2, "fontsize", 14 ,'DataAspectRatio',[1 1 1])
                     xlabel(app.UIAxes, 'Dimension in z Direction (mm)', 'FontSize', 14 );
                     ylabel(app.UIAxes, 'Dimension in y Direction (mm)', 'FontSize', 14 );
                     title(app.UIAxes, 'Sinusoidal Horn Profile', 'FontSize', 16 );
@@ -188,8 +186,7 @@ classdef UAT_exported < matlab.apps.AppBase
                     z = [za,zb];
 
                     plot(app.UIAxes, z, a);
-                    set(app.UIAxes, "linewidth",2, "fontsize", 14 )
-                    axis equal;
+                    set(app.UIAxes, "linewidth",2, "fontsize", 14 ,'DataAspectRatio',[1 1 1])
                     xlabel(app.UIAxes, 'Dimension in z Direction (mm)', 'FontSize', 14 );
                     ylabel(app.UIAxes, 'Dimension in y Direction (mm)', 'FontSize', 14 );
                     title(app.UIAxes, 'Asymmetric Sine Squared Horn Profile', 'FontSize', 16 );
@@ -201,8 +198,7 @@ classdef UAT_exported < matlab.apps.AppBase
                     a = ai+(ao-ai)*((1-A)*(z/len)+A*power(tan((pi*z)/(4*len)),rho));
 
                     plot(app.UIAxes, z, a);
-                    set(app.UIAxes, "linewidth",2, "fontsize", 14 )
-                    axis equal;
+                    set(app.UIAxes, "linewidth",2, "fontsize", 14 ,'DataAspectRatio',[1 1 1])
                     xlabel(app.UIAxes, 'Dimension in z Direction (mm)', 'FontSize', 14 );
                     ylabel(app.UIAxes, 'Dimension in y Direction (mm)', 'FontSize', 14 );
                     title(app.UIAxes, 'Tangential Horn Profile', 'FontSize', 16 );
@@ -214,8 +210,7 @@ classdef UAT_exported < matlab.apps.AppBase
                     a = ai+(ao-ai)*((1-A)*(z/len)+A*power(z/len,rho));
 
                     plot(app.UIAxes, z, a);
-                    set(app.UIAxes, "linewidth",2, "fontsize", 14 )
-                    axis equal;
+                    set(app.UIAxes, "linewidth",2, "fontsize", 14 ,'DataAspectRatio',[1 1 1])
                     xlabel(app.UIAxes, 'Dimension in z Direction (mm)', 'FontSize', 14 );
                     ylabel(app.UIAxes, 'Dimension in y Direction (mm)', 'FontSize', 14 );
                     title(app.UIAxes, 'xp Horn Profile', 'FontSize', 16 );
@@ -225,8 +220,7 @@ classdef UAT_exported < matlab.apps.AppBase
                     a=ai*exp(log(ao/ai)*(z/len));
 
                     plot(app.UIAxes, z, a);
-                    set(app.UIAxes, "linewidth",2, "fontsize", 14 )
-                    axis equal;
+                    set(app.UIAxes, "linewidth",2, "fontsize", 14 ,'DataAspectRatio',[1 1 1])
                     xlabel(app.UIAxes, 'Dimension in z Direction (mm)', 'FontSize', 14 );
                     ylabel(app.UIAxes, 'Dimension in y Direction (mm)', 'FontSize', 14 );
                     title(app.UIAxes, 'Exponential Horn Profile', 'FontSize', 16 );
@@ -236,8 +230,7 @@ classdef UAT_exported < matlab.apps.AppBase
                     a = sqrt(ai^2 + (power(z,2) * (ao^2-ai^2) / len^2));
 
                     plot(app.UIAxes, z, a);
-                    set(app.UIAxes, "linewidth",2, "fontsize", 14 )
-                    axis equal;
+                    set(app.UIAxes, "linewidth",2, "fontsize", 14 ,'DataAspectRatio',[1 1 1])
                     xlabel(app.UIAxes, 'Dimension in z Direction (mm)', 'FontSize', 14 );
                     ylabel(app.UIAxes, 'Dimension in y Direction (mm)', 'FontSize', 14 );
                     title(app.UIAxes, 'Hyperbolic Horn Profile', 'FontSize', 16 );
@@ -248,8 +241,7 @@ classdef UAT_exported < matlab.apps.AppBase
                     a=ai+(rho+1)*(ao-ai)*(1-((rho*z)/((rho+1)*len))).*power(z/len,rho);
 
                     plot(app.UIAxes, z, a);
-                    set(app.UIAxes, "linewidth",2, "fontsize", 14 )
-                    axis equal;
+                    set(app.UIAxes, "linewidth",2, "fontsize", 14 ,'DataAspectRatio',[1 1 1])
                     xlabel(app.UIAxes, 'Dimension in z Direction (mm)', 'FontSize', 14 );
                     ylabel(app.UIAxes, 'Dimension in y Direction (mm)', 'FontSize', 14 );
                     title(app.UIAxes, 'Polynomial Horn Profile', 'FontSize', 16 );
@@ -393,17 +385,11 @@ classdef UAT_exported < matlab.apps.AppBase
             % Add the rest of the geometry to create a closed path
             % a_offset is the inner horn profile shifted up to give the horn a thickness
             a_offset = a+(lam_c_mm/2+2);
-            %figure;                    % Uncomment these three lines for debugging
-            %plot(app.UIAxes, z, a_offset);
-            %axis equal;
 
             % Add vertical surface at horn aperture
             lent = [lent, lent(z_number)];
             rad = [rad, a_offset(N)];
             radmsh=rad;                 % radmesh to fix mesh lines to corrugations
-            %figure;                    % Uncomment these three lines for debugging
-            %plot(app.UIAxes, lent, rad);
-            %axis equal;
 
             % Flip outer surface profile so that widest horn dimensions comes next in the outline coordinates
             outer_surface = fliplr(a_offset);
@@ -417,14 +403,10 @@ classdef UAT_exported < matlab.apps.AppBase
             plot(app.UIAxes, lent,rad);
             xlim(app.UIAxes, [-wgl-10 N*p+10])
             ylim(app.UIAxes, [0 Inf])
-            set(app.UIAxes, "linewidth",2, "fontsize", 14 )
+            set(app.UIAxes, "linewidth",2, "fontsize", 14 ,'DataAspectRatio',[1 1 1])
             xlabel(app.UIAxes, 'Dimension in z Direction (mm)', 'FontSize', 14 );
             ylabel(app.UIAxes, 'Dimension in y Direction (mm)', 'FontSize', 14 );
             title(app.UIAxes, 'Complete Corrugated Horn Profile', 'FontSize', 16 );
-%             grid on
-% 
-% 
-%             axis equal;   % Scale axis equally for aspect ratio 1:1
 
         end
     end
