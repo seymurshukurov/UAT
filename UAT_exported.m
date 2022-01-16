@@ -37,10 +37,10 @@ classdef UAT_exported < matlab.apps.AppBase
         FSSTab                          matlab.ui.container.Tab
         ElementSpacingmmEditField       matlab.ui.control.NumericEditField
         ElementSpacingmmEditFieldLabel  matlab.ui.control.Label
-        InnerRadiusmmEditField          matlab.ui.control.NumericEditField
-        InnerRadiusmmEditFieldLabel     matlab.ui.control.Label
-        OuterRadiusmmEditField          matlab.ui.control.NumericEditField
-        OuterRadiusmmEditFieldLabel     matlab.ui.control.Label
+        InnerRadiusLengthmmEditField    matlab.ui.control.NumericEditField
+        InnerRadiusLengthmmEditFieldLabel  matlab.ui.control.Label
+        OuterRadiusLengthmmEditField    matlab.ui.control.NumericEditField
+        OuterRadiusLengthmmEditFieldLabel  matlab.ui.control.Label
         ConstructFSSButton              matlab.ui.control.Button
         PreviewFSSButton                matlab.ui.control.Button
         LatticeStructureDropDown        matlab.ui.control.DropDown
@@ -51,7 +51,7 @@ classdef UAT_exported < matlab.apps.AppBase
         ReflectorAntennaTab             matlab.ui.container.Tab
         SeptumPolarizerTab              matlab.ui.container.Tab
         WaveguideFilterTab              matlab.ui.container.Tab
-        UltimateAntennaDesignerToolLabel  matlab.ui.control.Label
+        UltimateRFDesignerToolLabel     matlab.ui.control.Label
     end
 
 
@@ -1002,7 +1002,7 @@ classdef UAT_exported < matlab.apps.AppBase
                     switch lattice
                         case 'Triangular'
                             hold(app.UIAxes_FSS,'off')
-                            r_out=app.OuterRadiusmmEditField.Value;
+                            r_out=app.OuterRadiusLengthmmEditField.Value;
                             dist=app.ElementSpacingmmEditField.Value;
 
                             th = 0:pi/50:2*pi;
@@ -1022,7 +1022,7 @@ classdef UAT_exported < matlab.apps.AppBase
                             end
                         case 'Rectangular'
                             hold(app.UIAxes_FSS,'off')
-                            r_out=app.OuterRadiusmmEditField.Value;
+                            r_out=app.OuterRadiusLengthmmEditField.Value;
                             dist=app.ElementSpacingmmEditField.Value;
 
                             th = 0:pi/50:2*pi;
@@ -1041,8 +1041,8 @@ classdef UAT_exported < matlab.apps.AppBase
                     switch lattice
                         case 'Triangular'
                             hold(app.UIAxes_FSS,'off')
-                            r_out=app.OuterRadiusmmEditField.Value;
-                            r_in=app.InnerRadiusmmEditField.Value;
+                            r_out=app.OuterRadiusLengthmmEditField.Value;
+                            r_in=app.InnerRadiusLengthmmEditField.Value;
                             dist=app.ElementSpacingmmEditField.Value;
 
                             th = 0:pi/50:2*pi;
@@ -1068,8 +1068,8 @@ classdef UAT_exported < matlab.apps.AppBase
                             end
                         case 'Rectangular'
                             hold(app.UIAxes_FSS,'off')
-                            r_out=app.OuterRadiusmmEditField.Value;
-                            r_in=app.InnerRadiusmmEditField.Value;
+                            r_out=app.OuterRadiusLengthmmEditField.Value;
+                            r_in=app.InnerRadiusLengthmmEditField.Value;
                             dist=app.ElementSpacingmmEditField.Value;
 
                             th = 0:pi/50:2*pi;
@@ -1088,9 +1088,66 @@ classdef UAT_exported < matlab.apps.AppBase
                             end
                     end
                 case 'Rectangular'
-                    horn_profile = 3;
+                    switch lattice
+                        case 'Triangular'
+                            hold(app.UIAxes_FSS,'off')
+                            r_out=app.OuterRadiusLengthmmEditField.Value;
+                            dist=app.ElementSpacingmmEditField.Value;
+                            plot(app.UIAxes_FSS,0,0) % to clear the precious plot, hold off is not working
+
+                            rectangle(app.UIAxes_FSS,'Position',[-r_out/2 -r_out/2 r_out r_out],'FaceColor',[0 0 1]);
+                            hold(app.UIAxes_FSS,'on')
+                            set(app.UIAxes_FSS, "linewidth",2, "fontsize", 14 ,'DataAspectRatio',[1 1 1])
+
+                            for ii=0:60:300
+                                rectangle(app.UIAxes_FSS,'Position',[-r_out/2+dist*sind(ii) -r_out/2+dist*cosd(ii) r_out r_out],'FaceColor',[0 0 1]);
+                                set(app.UIAxes_FSS, "linewidth",2, "fontsize", 14 ,'DataAspectRatio',[1 1 1])
+                            end
+                        case 'Rectangular'
+                            hold(app.UIAxes_FSS,'off')
+                            r_out=app.OuterRadiusLengthmmEditField.Value;
+                            dist=app.ElementSpacingmmEditField.Value;
+                            plot(app.UIAxes_FSS,0,0) % to clear the precious plot, hold off is not working
+
+                            for ii=45:90:315
+                                rectangle(app.UIAxes_FSS,'Position',[-r_out/2+dist*sqrt(2)*sind(ii)/2 -r_out/2+dist*sqrt(2)*cosd(ii)/2 r_out r_out],'FaceColor',[0 0 1]);
+                                set(app.UIAxes_FSS, "linewidth",2, "fontsize", 14 ,'DataAspectRatio',[1 1 1])
+                                hold(app.UIAxes_FSS,'on')
+                            end
+                    end
                 case 'Ractangular Loop'
-                    horn_profile = 4;
+                    switch lattice
+                        case 'Triangular'
+                            hold(app.UIAxes_FSS,'off')
+                            r_out=app.OuterRadiusLengthmmEditField.Value;
+                            r_in=app.InnerRadiusLengthmmEditField.Value;
+                            dist=app.ElementSpacingmmEditField.Value;
+                            plot(app.UIAxes_FSS,0,0) % to clear the precious plot, hold off is not working
+
+                            rectangle(app.UIAxes_FSS,'Position',[-r_out/2 -r_out/2 r_out r_out],'FaceColor',[0 0 1]);
+                            hold(app.UIAxes_FSS,'on')
+                            rectangle(app.UIAxes_FSS,'Position',[-r_in/2 -r_in/2 r_in r_in],'FaceColor',[1 1 1]);
+                            set(app.UIAxes_FSS, "linewidth",2, "fontsize", 14 ,'DataAspectRatio',[1 1 1])
+
+                            for ii=0:60:300
+                                rectangle(app.UIAxes_FSS,'Position',[-r_out/2+dist*sind(ii) -r_out/2+dist*cosd(ii) r_out r_out],'FaceColor',[0 0 1]);
+                                rectangle(app.UIAxes_FSS,'Position',[-r_in/2+dist*sind(ii) -r_in/2+dist*cosd(ii) r_in r_in],'FaceColor',[1 1 1]);
+                                set(app.UIAxes_FSS, "linewidth",2, "fontsize", 14 ,'DataAspectRatio',[1 1 1])
+                            end
+                        case 'Rectangular'
+                            hold(app.UIAxes_FSS,'off')
+                            r_out=app.OuterRadiusLengthmmEditField.Value;
+                            dist=app.ElementSpacingmmEditField.Value;
+                            r_in=app.InnerRadiusLengthmmEditField.Value;
+                            plot(app.UIAxes_FSS,0,0) % to clear the precious plot, hold off is not working
+
+                            for ii=45:90:315
+                                rectangle(app.UIAxes_FSS,'Position',[-r_out/2+dist*sqrt(2)*sind(ii)/2 -r_out/2+dist*sqrt(2)*cosd(ii)/2 r_out r_out],'FaceColor',[0 0 1]);
+                                rectangle(app.UIAxes_FSS,'Position',[-r_in/2+dist*sqrt(2)*sind(ii)/2 -r_in/2+dist*sqrt(2)*cosd(ii)/2 r_in r_in],'FaceColor',[1 1 1]);
+                                set(app.UIAxes_FSS, "linewidth",2, "fontsize", 14 ,'DataAspectRatio',[1 1 1])
+                                hold(app.UIAxes_FSS,'on')
+                            end
+                    end
                 case 'Triangular'
                     horn_profile = 5;
                 case 'Triangular Loop'
@@ -1114,14 +1171,14 @@ classdef UAT_exported < matlab.apps.AppBase
             app.UIFigure.Position = [100 100 1037 598];
             app.UIFigure.Name = 'MATLAB App';
 
-            % Create UltimateAntennaDesignerToolLabel
-            app.UltimateAntennaDesignerToolLabel = uilabel(app.UIFigure);
-            app.UltimateAntennaDesignerToolLabel.HorizontalAlignment = 'center';
-            app.UltimateAntennaDesignerToolLabel.FontSize = 20;
-            app.UltimateAntennaDesignerToolLabel.FontWeight = 'bold';
-            app.UltimateAntennaDesignerToolLabel.FontColor = [0.149 0.149 0.149];
-            app.UltimateAntennaDesignerToolLabel.Position = [365 574 311 25];
-            app.UltimateAntennaDesignerToolLabel.Text = 'Ultimate Antenna Designer Tool';
+            % Create UltimateRFDesignerToolLabel
+            app.UltimateRFDesignerToolLabel = uilabel(app.UIFigure);
+            app.UltimateRFDesignerToolLabel.HorizontalAlignment = 'center';
+            app.UltimateRFDesignerToolLabel.FontSize = 20;
+            app.UltimateRFDesignerToolLabel.FontWeight = 'bold';
+            app.UltimateRFDesignerToolLabel.FontColor = [0.149 0.149 0.149];
+            app.UltimateRFDesignerToolLabel.Position = [367 574 311 25];
+            app.UltimateRFDesignerToolLabel.Text = 'Ultimate RF Designer Tool';
 
             % Create TabGroup
             app.TabGroup = uitabgroup(app.UIFigure);
@@ -1320,7 +1377,7 @@ classdef UAT_exported < matlab.apps.AppBase
 
             % Create UIAxes_FSS
             app.UIAxes_FSS = uiaxes(app.FSSTab);
-            title(app.UIAxes_FSS, 'Complete Corrugated Horn Profile')
+            title(app.UIAxes_FSS, 'Unit Cell Configuration')
             xlabel(app.UIAxes_FSS, 'Dimension in z Direction (mm)')
             ylabel(app.UIAxes_FSS, 'Dimension in y Direction (mm)')
             zlabel(app.UIAxes_FSS, 'Z')
@@ -1337,7 +1394,7 @@ classdef UAT_exported < matlab.apps.AppBase
 
             % Create UnitCellTypeDropDown
             app.UnitCellTypeDropDown = uidropdown(app.FSSTab);
-            app.UnitCellTypeDropDown.Items = {'Circular', 'Circular Loop', 'Rectangular', 'Ractangular Loop', 'Triangular', 'Triangular Loop', 'Hexagonal', 'Hexagonal Loop'};
+            app.UnitCellTypeDropDown.Items = {'Circular', 'Circular Loop', 'Rectangular', 'Ractangular Loop', 'Hexagonal', 'Hexagonal Loop'};
             app.UnitCellTypeDropDown.Position = [132 449 139 22];
             app.UnitCellTypeDropDown.Value = 'Circular';
 
@@ -1365,27 +1422,27 @@ classdef UAT_exported < matlab.apps.AppBase
             app.ConstructFSSButton.Position = [775 23 100 22];
             app.ConstructFSSButton.Text = 'Construct';
 
-            % Create OuterRadiusmmEditFieldLabel
-            app.OuterRadiusmmEditFieldLabel = uilabel(app.FSSTab);
-            app.OuterRadiusmmEditFieldLabel.Position = [23 378 108 22];
-            app.OuterRadiusmmEditFieldLabel.Text = 'Outer Radius (mm)';
+            % Create OuterRadiusLengthmmEditFieldLabel
+            app.OuterRadiusLengthmmEditFieldLabel = uilabel(app.FSSTab);
+            app.OuterRadiusLengthmmEditFieldLabel.Position = [23 378 148 22];
+            app.OuterRadiusLengthmmEditFieldLabel.Text = 'Outer Radius/Length (mm)';
 
-            % Create OuterRadiusmmEditField
-            app.OuterRadiusmmEditField = uieditfield(app.FSSTab, 'numeric');
-            app.OuterRadiusmmEditField.Limits = [0 Inf];
-            app.OuterRadiusmmEditField.Position = [205 378 44 22];
-            app.OuterRadiusmmEditField.Value = 5;
+            % Create OuterRadiusLengthmmEditField
+            app.OuterRadiusLengthmmEditField = uieditfield(app.FSSTab, 'numeric');
+            app.OuterRadiusLengthmmEditField.Limits = [0 Inf];
+            app.OuterRadiusLengthmmEditField.Position = [205 378 44 22];
+            app.OuterRadiusLengthmmEditField.Value = 5;
 
-            % Create InnerRadiusmmEditFieldLabel
-            app.InnerRadiusmmEditFieldLabel = uilabel(app.FSSTab);
-            app.InnerRadiusmmEditFieldLabel.Position = [23 347 105 22];
-            app.InnerRadiusmmEditFieldLabel.Text = 'Inner Radius (mm)';
+            % Create InnerRadiusLengthmmEditFieldLabel
+            app.InnerRadiusLengthmmEditFieldLabel = uilabel(app.FSSTab);
+            app.InnerRadiusLengthmmEditFieldLabel.Position = [23 347 145 22];
+            app.InnerRadiusLengthmmEditFieldLabel.Text = 'Inner Radius/Length (mm)';
 
-            % Create InnerRadiusmmEditField
-            app.InnerRadiusmmEditField = uieditfield(app.FSSTab, 'numeric');
-            app.InnerRadiusmmEditField.Limits = [0 Inf];
-            app.InnerRadiusmmEditField.Position = [205 347 44 22];
-            app.InnerRadiusmmEditField.Value = 4.5;
+            % Create InnerRadiusLengthmmEditField
+            app.InnerRadiusLengthmmEditField = uieditfield(app.FSSTab, 'numeric');
+            app.InnerRadiusLengthmmEditField.Limits = [0 Inf];
+            app.InnerRadiusLengthmmEditField.Position = [205 347 44 22];
+            app.InnerRadiusLengthmmEditField.Value = 4.5;
 
             % Create ElementSpacingmmEditFieldLabel
             app.ElementSpacingmmEditFieldLabel = uilabel(app.FSSTab);
